@@ -1,63 +1,53 @@
-import { fetchUriageData } from './services/domoApi.js';
+import { fetchUriageData } from './queries/fetchUriageData.js';
 import { setupModeSelector } from './ui/modeSelector.js';
-import { AnalysisMode } from './data/analysisMode.js';
 import { setupDateSelectors } from './ui/uiHandlers.js';
+import { CompareConditions } from './ui/compareOptions.js';
+import { getStrategy } from './analysis/index.js';
+import { showAllLoading } from './ui/loading.js';
 
-let uriage = [];
+/**
+ * 初期化処理（イベント登録）
+ */
 
-window.addEventListener('DOMContentLoaded', async () => {
-    // uriage = await fetchUriageData();
-    // console.log('uriage data:', uriage);
-
+let compareConditions;
+function initializeUI() {
     setupModeSelector();
     setupDateSelectors();
+    compareConditions = new CompareConditions();
+    compareConditions.setupUI();
 
     const analyzeBtn = document.getElementById('analyzeBtn');
-    analyzeBtn.addEventListener('click', () => {
-        // バリデーション: チェックボックスいずれか1つはtrue
-        const prevYear = document.getElementById('includePrevYearSameMonth');
-        const recent = document.getElementById('includeRecentMonths');
-        if (!(prevYear.checked || recent.checked)) {
-            alert('チェックボックスのいずれか1つは選択してください。');
-            return;
-        }
+    analyzeBtn.addEventListener('click', handleAnalyzeClick);
+}
 
-        // 解析関数呼び出し
-        const mode = document.getElementById('modeSelector').value;
-        // 解析関数はuiHandlers.jsのswitchと同じ
-        switch (mode) {
-            case AnalysisMode.ZSCORE:
-                window.runZScoreAnalysis && window.runZScoreAnalysis();
-                break;
-            case AnalysisMode.STL:
-                window.runSeasonalDecompose && window.runSeasonalDecompose();
-                break;
-            case AnalysisMode.PCA:
-                window.runPCAAnalysis && window.runPCAAnalysis();
-                break;
-            case AnalysisMode.ISOLATION_FOREST:
-                window.runIsolationForest && window.runIsolationForest();
-                break;
-            case AnalysisMode.LOF:
-                window.runLocalOutlierFactor && window.runLocalOutlierFactor();
-                break;
-            case AnalysisMode.SHAP:
-                window.runSHAPAnalysis && window.runSHAPAnalysis();
-                break;
-            case AnalysisMode.AUTOENCODER:
-                window.runAutoencoderAnalysis && window.runAutoencoderAnalysis();
-                break;
-            case AnalysisMode.CUSUM:
-                window.runCUSUMAnalysis && window.runCUSUMAnalysis();
-                break;
-            case AnalysisMode.BOCPD:
-                window.runBOCPDAnalysis && window.runBOCPDAnalysis();
-                break;
-            case AnalysisMode.BASKET:
-                window.runBasketAnalysis && window.runBasketAnalysis();
-                break;
-            default:
-                alert('不明な解析モードです');
-        }
-    });
-});
+/**
+ * 分析ボタン押下時の処理
+ */
+async function handleAnalyzeClick() {
+    showAllLoading(3); // section1〜3 ローディング表示
+
+    const mode = document.getElementById('modeSelector').value;
+    const props = compareConditions.createProps();
+    fetchUriageData(props.recentMonthWindow)
+        .then(rawData => {
+            const strategy = getStrategy(mode);
+            return strategy.run(props, rawData);
+        })
+        .catch(error => {
+            console.error('解析エラー:', error);
+            alert(error.message || '不明な解析モードまたは処理エラーが発生しました');
+        });
+}
+
+/**
+ * エントリーポイント
+ */
+async function main() {
+    try {
+        initializeUI();
+    } catch (e) {
+        console.error('初期化失敗:', e);
+    }
+}
+
+window.addEventListener('DOMContentLoaded', main);

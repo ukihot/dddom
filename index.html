@@ -8,62 +8,61 @@
 
 <body>
     <h1 class="main-title">逸脱検出および傾向変動評価に関する月次報告書</h1>
-
     <div class="controls-grid improved-grid">
+        <div class="form-block mode-block" id="modeSelectorBlock">
+            <!-- モードセレクタ -->
+        </div>
         <div class="row year-month-row">
-            <div class="form-block compact-block">
+            <div class="form-block compact-block year-block">
                 <label for="yearSelector">対象年</label>
                 <select id="yearSelector" class="mode-dropdown"></select>
             </div>
-            <div class="form-block compact-block">
+            <div class="form-block compact-block month-block">
                 <label for="monthSelector">対象月</label>
                 <select id="monthSelector" class="mode-dropdown"></select>
             </div>
         </div>
-        <div class="form-block mode-block" id="modeSelectorBlock">
-            <!-- JSでモードセレクタを自動生成 -->
-        </div>
+        <div id="modeDescription" class="mode-description"></div>
         <div class="form-block check-group">
-            <label class="accent-label">
-                <input type="checkbox" id="includePrevYearSameMonth">
-                前年同月を比較対象に含める
-            </label>
-            <label class="accent-label margin-top">
-                <input type="checkbox" id="includeRecentMonths">
-                直近
-                <select id="recentMonthWindow" class="recent-month-window" disabled>
-                    <option value="3">3</option>
-                    <option value="4">4</option>
-                    <option value="5">5</option>
-                    <option value="6">6</option>
-                    <option value="7">7</option>
-                    <option value="8">8</option>
-                    <option value="9">9</option>
-                    <option value="10">10</option>
-                    <option value="11">11</option>
-                </select>ヵ月を比較対象に含める
-            </label>
+            <!-- 比較材料フィールドセット -->
         </div>
     </div>
 
-    <div style="text-align:center; margin-bottom:2.5rem;">
+    <div class="analyze-btn-container">
         <button id="analyzeBtn" class="modern-btn">実行</button>
     </div>
-
 
     <h2 class="section-title">セクション1タイトル</h2>
     <h3 class="sub-title"></h3>
 
+    <!-- 解析結果表示領域1 -->
+    <div id="resultSection1" class="chart-result-area">
+        <!-- Chart.jsでグラフを描画するcanvas要素などをここに挿入 -->
+    </div>
+
     <h2 class="section-title">セクション2タイトル</h2>
     <h3 class="sub-title"></h3>
+
+    <!-- 解析結果表示領域2 -->
+    <div id="resultSection2" class="chart-result-area">
+        <!-- Chart.jsでグラフを描画するcanvas要素などをここに挿入 -->
+    </div>
 
     <h2 class="section-title">セクション3タイトル</h2>
     <h3 class="sub-title"></h3>
 
+    <!-- 解析結果表示領域3 -->
+    <div id="resultSection3" class="chart-result-area">
+        <!-- Chart.jsでグラフを描画するcanvas要素などをここに挿入 -->
+    </div>
 
+    <!-- Domo utils -->
     <script src="https://unpkg.com/ryuu.js@4.6.0/dist/domo.js"
         integrity="sha384-YYsd9wQ+wDlUWhvpfGdptxmNYIqBC+52oJtWgPKJadbs3sSFTY/+ZotPbEHTTRWz"
         crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/@domoinc/domo-phoenix/build/global/domoPhoenix.js"></script>
+
+    <!-- Tsuchiyoshi utils -->
     <script type="module" src="./src/app.js"></script>
 </body>
 

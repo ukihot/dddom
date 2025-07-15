@@ -1,38 +1,10 @@
-// 年・月・比較条件など日付系UIロジック
 export function setupDateSelectors() {
     const yearSelector = document.getElementById('yearSelector');
     const monthSelector = document.getElementById('monthSelector');
-    const includeRecentMonths = document.getElementById('includeRecentMonths');
-    const recentMonthWindow = document.getElementById('recentMonthWindow');
-    // 「直近xヵ月を比較対象に含める」チェックボックスの挙動
-    if (includeRecentMonths && recentMonthWindow) {
-        includeRecentMonths.addEventListener('change', () => {
-            if (includeRecentMonths.checked) {
-                recentMonthWindow.disabled = false;
-                // 値が空なら3をセット
-                if (!recentMonthWindow.value) {
-                    recentMonthWindow.value = '3';
-                }
-            } else {
-                recentMonthWindow.disabled = true;
-                recentMonthWindow.value = '';
-            }
-        });
-        // 初期状態
-        if (!includeRecentMonths.checked) {
-            recentMonthWindow.disabled = true;
-            recentMonthWindow.value = '';
-        } else {
-            recentMonthWindow.disabled = false;
-            if (!recentMonthWindow.value) {
-                recentMonthWindow.value = '3';
-            }
-        }
-    }
 
     const current = new Date();
     const currentYear = current.getFullYear();
-    const currentMonth = current.getMonth() + 1; // JSは0-indexed
+    const currentMonth = current.getMonth() + 1;
 
     // 年セレクタ初期化（2015〜現在）
     for (let y = currentYear; y >= 2015; y--) {

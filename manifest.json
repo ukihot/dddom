@@ -1,0 +1,23 @@
+{
+    "id": "0e3aee46-aced-4ddb-8722-34692a1fd258",
+    "name": "Deviance Detection",
+    "version": "0.0.6",
+    "datasetsMapping": [
+        {
+            "dataSetId": "f3054bf2-c669-4e50-aef9-a10aedbdbd98",
+            "alias": "uriage",
+            "fields": [
+                {
+                    "alias": "uriageDate",
+                    "columnName": "売上日"
+                }
+            ],
+            "dql": null
+        }
+    ],
+    "size": {
+        "width": 1,
+        "height": 1
+    },
+    "fullpage": true
+}

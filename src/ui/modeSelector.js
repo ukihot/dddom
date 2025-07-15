@@ -1,9 +1,7 @@
 // 統計解析モードセレクタのUIロジック
+import { AnalysisMode } from '../defs/analysisMode.js';
+import { explanations } from '../defs/explanations.js';
 
-import { AnalysisMode } from '../data/analysisMode.js';
-import { explanations } from '../data/explanations.js';
-
-// セレクタのラベルと表示名の対応
 const MODE_LABELS = [
     { value: AnalysisMode.ZSCORE, label: 'Zスコア' },
     { value: AnalysisMode.STL, label: '季節トレンド分解（STL）' },
@@ -17,20 +15,7 @@ const MODE_LABELS = [
     { value: AnalysisMode.BASKET, label: 'Basket分析（+異常スコア）' },
 ];
 
-// 解析関数のダミー（本来はanalysisHandlers.jsで定義）
-window.runZScoreAnalysis = window.runZScoreAnalysis || (() => { });
-window.runSeasonalDecompose = window.runSeasonalDecompose || (() => { });
-window.runPCAAnalysis = window.runPCAAnalysis || (() => { });
-window.runIsolationForest = window.runIsolationForest || (() => { });
-window.runLocalOutlierFactor = window.runLocalOutlierFactor || (() => { });
-window.runSHAPAnalysis = window.runSHAPAnalysis || (() => { });
-window.runAutoencoderAnalysis = window.runAutoencoderAnalysis || (() => { });
-window.runCUSUMAnalysis = window.runCUSUMAnalysis || (() => { });
-window.runBOCPDAnalysis = window.runBOCPDAnalysis || (() => { });
-window.runBasketAnalysis = window.runBasketAnalysis || (() => { });
-
 export function setupModeSelector() {
-    // セレクタ自動生成
     const block = document.getElementById('modeSelectorBlock');
     if (!block) return;
     block.innerHTML = '';
@@ -49,18 +34,10 @@ export function setupModeSelector() {
     block.appendChild(label);
     block.appendChild(selector);
 
+
     const sectionTitles = document.querySelectorAll('h2.section-title');
     const subTitles = document.querySelectorAll('h3.sub-title');
-    const descriptionId = 'modeDescription';
-
-    // 説明文表示用要素を追加（なければ）
-    let descElem = document.getElementById(descriptionId);
-    if (!descElem) {
-        descElem = document.createElement('div');
-        descElem.id = descriptionId;
-        descElem.className = 'mode-description';
-        block.appendChild(descElem);
-    }
+    const descElem = document.getElementById('modeDescription');
 
     selector.addEventListener('change', () => {
         const mode = selector.value;
@@ -74,32 +51,6 @@ export function setupModeSelector() {
             el.textContent = info.subTitles[idx] || '';
         });
         descElem.textContent = info.description || '';
-
-        // 解析関数呼び出し（windowに生やしておく）
-        switch (mode) {
-            case AnalysisMode.ZSCORE:
-                window.runZScoreAnalysis(); break;
-            case AnalysisMode.STL:
-                window.runSeasonalDecompose(); break;
-            case AnalysisMode.PCA:
-                window.runPCAAnalysis(); break;
-            case AnalysisMode.ISOLATION_FOREST:
-                window.runIsolationForest(); break;
-            case AnalysisMode.LOF:
-                window.runLocalOutlierFactor(); break;
-            case AnalysisMode.SHAP:
-                window.runSHAPAnalysis(); break;
-            case AnalysisMode.AUTOENCODER:
-                window.runAutoencoderAnalysis(); break;
-            case AnalysisMode.CUSUM:
-                window.runCUSUMAnalysis(); break;
-            case AnalysisMode.BOCPD:
-                window.runBOCPDAnalysis(); break;
-            case AnalysisMode.BASKET:
-                window.runBasketAnalysis(); break;
-            default:
-            // 何もしない
-        }
     });
 
     // 初期化時にイベント発火して内容をセット
